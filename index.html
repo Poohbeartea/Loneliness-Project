@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Loneliness Project</title>
+  <style>
+    /* ---------------- GLOBAL RESET ---------------- */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+   body {
+  font-family: "Playfair Display", serif;
+  overflow-x: hidden; /* prevent horizontal scroll but allow vertical */
+  color: #f0f0f0;
+  background: #000;
+}
+
+    /* ---------------- SECTION 1 ---------------- */
+    .intro {
+      position: relative;
+      height: 100vh;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      text-align: center;
+      transition: background 1s ease;
+    }
+
+    .graphite-bg {
+      background: url("https://upload.wikimedia.org/wikipedia/commons/7/7d/Pencil_texture_background.jpg") center/cover no-repeat;
+      animation: graphiteZoom 20s ease-in-out infinite alternate;
+    }
+
+    .spiral-bg {
+      background: radial-gradient(circle at center,
+          #1a1a1a 0%,
+          #0f0f0f 20%,
+          #050505 60%,
+          #000 100%);
+      animation: spiralShift 10s linear infinite;
+    }
+
+    @keyframes graphiteZoom {
+      0% { transform: scale(1); }
+      100% { transform: scale(1.05); }
+    }
+
+    @keyframes spiralShift {
+      0% { background-position: 50% 50%; }
+      50% { background-position: 55% 45%; }
+      100% { background-position: 50% 50%; }
+    }
+
+    #loneliness {
+      font-size: 5rem;
+      letter-spacing: 0.4rem;
+      opacity: 0;
+      animation: fadeIn 3s ease forwards, pulse 8s ease-in-out infinite;
+      cursor: pointer;
+    }
+
+    #author {
+      font-size: 1.2rem;
+      opacity: 0;
+      transition: opacity 1.5s ease;
+      margin-top: 1rem;
+      color: #bdbdbd;
+    }
+
+    #loneliness:hover + #author {
+      opacity: 1;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.03); }
+    }
+
+    #toggleBtn {
+      position: absolute;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      padding: 0.6rem 1.2rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s;
+      font-size: 0.9rem;
+    }
+
+    #toggleBtn:hover {
+      background: rgba(255, 255, 255, 0.25);
+    }
+
+    .fade-out {
+      animation: fadeToBlack 1s forwards;
+    }
+
+    @keyframes fadeToBlack {
+      from { opacity: 1; }
+      to { opacity: 0; background: #000; }
+    }
+
+    /* ---------------- SECTION 2 ---------------- */
+    #section2 {
+      position: relative;
+      height: 100vh;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      color: #fff;
+      overflow: hidden;
+      background: linear-gradient(-45deg, #1b0036, #1a237e, #4a148c, #283593);
+      background-size: 400% 400%;
+      animation: gradientShift 15s ease infinite;
+      opacity: 0; /* start hidden */
+      transition: opacity 2s ease;
+    }
+
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .section-header {
+      position: absolute;
+      top: 40px;
+      width: 100%;
+      text-align: center;
+      font-size: 1.8rem;
+      letter-spacing: 2px;
+      opacity: 0;
+      animation: fadeDown 2s ease forwards;
+      animation-delay: 1s;
+    }
+
+    @keyframes fadeDown {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .info-box {
+      max-width: 700px;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 40px 60px;
+      border-radius: 20px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+      text-align: left;
+      opacity: 0;
+      animation: fadeUp 2s ease forwards;
+      animation-delay: 1.5s;
+    }
+
+    .info-box h1 {
+      margin-top: 0;
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #ffffff;
+    }
+
+    .info-box p {
+      margin-top: 15px;
+      line-height: 1.6;
+      font-size: 1.1rem;
+      color: #e0e0e0;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 600px) {
+      .info-box {
+        padding: 30px;
+      }
+      .info-box h1 { font-size: 1.4rem; }
+      .info-box p { font-size: 1rem; }
+    }
+   /* ------------------- SECTION 3 ------------------- */
+    #section3 {
+      display: none;
+      opacity: 0;
+      transition: opacity 2s ease;
+    }
+
+    .scene {
+      width: 100%;
+      height: 100vh;
+      position: absolute;
+      top: 0;
+      left: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      opacity: 0;
+      transition: opacity 1.5s ease;
+    }
+
+    .scene.active {
+      opacity: 1;
+      z-index: 2;
+    }
+
+    /* Sam intro */
+    #samIntro {
+      background: linear-gradient(120deg, #1a237e, #283593);
+      animation: driftBg 20s infinite alternate ease-in-out;
+    }
+
+    @keyframes driftBg {
+      0% { background-position: 0% 0%; }
+      100% { background-position: 100% 100%; }
+    }
+
+    .sam-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 40px;
+      padding: 40px;
+    }
+
+    .sam-image {
+      width: 300px;
+      height: 400px;
+      background: url("images/sam.png") center/cover no-repeat;
+      border-radius: 20px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.5);
+    }
+
+    .sam-textbox {
+      max-width: 500px;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+    }
+
+    /* Scenes */
+    #sceneClassroom {
+      background: url("images/classroom.jpg") center/cover no-repeat;
+      animation: sceneDrift 40s linear infinite alternate;
+    }
+
+    #sceneCafeteria {
+      background: url("images/cafeteria.jpg") center/cover no-repeat;
+      animation: sceneDrift 40s linear infinite alternate;
+    }
+
+    @keyframes sceneDrift {
+      0% { background-position: 0% 50%; }
+      100% { background-position: 100% 50%; }
+    }
+
+    .scene-textbox {
+      max-width: 600px;
+      background: rgba(0, 0, 0, 0.5);
+      color: white;
+      padding: 30px;
+      border-radius: 15px;
+      text-align: left;
+      box-shadow: 0 0 20px rgba(0,0,0,0.5);
+    }
+
+    /* Phone Scene */
+    #phoneScene {
+      background: radial-gradient(circle at center, #111 0%, #000 80%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: row;
+      gap: 40px;
+    }
+
+    .phone {
+      width: 300px;
+      height: 550px;
+      background: #222;
+      border-radius: 30px;
+      border: 8px solid #555;
+      position: relative;
+      box-shadow: 0 0 30px rgba(0, 0, 0, 0.6);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+.phone-screen {
+  flex-grow: 1;
+  background: #111;
+  padding: 15px;
+  overflow-y: auto;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  gap: 20px; /* Space between posts */
+}
+
+.post {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 10px;
+  background: rgba(255,255,255,0.05);
+  padding: 10px;
+  border-radius: 10px;
+}
+
+.post-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.post-content {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.post-header {
+  font-weight: bold;
+  font-size: 0.9rem;
+}
+
+.post-body {
+  font-size: 0.85rem;
+}
+
+.post-image {
+  width: 100%;
+  border-radius: 10px;
+  margin-top: 5px;
+  object-fit: cover;
+}
+
+.phone-buttons {
+  display: flex;
+  justify-content: space-around;
+  padding: 10px;
+  background: #333;
+  border-top: 1px solid #555;
+  border-radius: 0 0 20px 20px;
+}
+
+button#likeBtn, button#postBtn {
+  flex: 1;
+  margin: 0 5px;
+  padding: 8px;
+  border-radius: 15px;
+  background: #444;
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+button#likeBtn:hover, button#postBtn:hover {
+  background: #666;
+}
+
+.side-text {
+  max-width: 350px;
+  background: rgba(255,255,255,0.1);
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 0 20px rgba(0,0,0,0.4);
+}
+button.next-btn, .next-scene-btn {
+  margin-top: 20px;
+  padding: 12px 40px;
+  border: 2px solid white;
+  background: linear-gradient(135deg, #4a148c, #1a237e);
+  color: white;
+  font-weight: 600;
+  font-size: 1rem;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+}
+
+button.next-btn:hover, .next-scene-btn:hover {
+  background: linear-gradient(135deg, #1a237e, #4a148c);
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+}
+
+}
+
+.section4-header {
+  font-size: 3rem;
+  margin-bottom: 30px;
+  opacity: 0;
+  transform: translateY(-20px);
+  animation: fadeDown 1.5s forwards;
+}
+#section4 {
+  display: none; /* initially hidden */
+  opacity: 0;
+  min-height: 100vh;
+  width: 100%;
+  background: linear-gradient(180deg, #0f0f0f, #1b0036);
+  color: #fff;
+  display: flex;
+  justify-content: flex-start; 
+  align-items: flex-start;
+  padding: 60px 20px;
+  flex-direction: column;
+  text-align: center;
+  overflow-y: auto; /* enables scrolling */
+  scroll-behavior: smooth;
+  transition: opacity 1.5s ease;
+}
+
+#section4.active {
+  display: block;
+  opacity: 1;
+}
+
+
+.section4-content {
+  max-width: 800px;
+  width: 100%;
+  margin: 0 auto; /* center horizontally */
+}
+
+.section4-box {
+  background: rgba(255,255,255,0.05);
+  border-radius: 20px;
+  padding: 30px 40px;
+  margin-bottom: 20px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.tips-box {
+  animation: fadeUp 1.5s forwards;
+  animation-delay: 0.5s;
+}
+
+.summary-box {
+  animation: fadeUp 1.5s forwards;
+  animation-delay: 1.5s;
+}
+
+.conclusion-box {
+  animation: fadeUp 1.5s forwards;
+  animation-delay: 2.5s;
+}
+
+.section4-box h2 {
+  margin-top: 0;
+  margin-bottom: 15px;
+  font-size: 1.5rem;
+}
+
+.section4-box p, .section4-box ul {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  text-align: left;
+}
+
+.section4-box ul li {
+  margin-bottom: 10px;
+  padding-left: 10px;
+  position: relative;
+}
+
+.section4-box ul li::before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  color: #fff;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeDown {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+    }
+  </style>
+</head>
+<body>
+  <!-- ===================== SECTION 1 ===================== -->
+  <section id="section1" class="intro graphite-bg">
+    <div class="intro-content">
+      <h1 id="loneliness">LONELINESS</h1>
+      <p id="author">By Te’airra Morris</p>
+    </div>
+    <button id="toggleBtn">Switch to Spiral</button>
+  </section>
+
+  <!-- ===================== SECTION 2 ===================== -->
+  <section id="section2">
+    <header class="section-header">
+      <h2>Understanding Loneliness</h2>
+    </header>
+    <div class="info-box">
+      <h1>What Is Loneliness?</h1>
+      <p>
+        Loneliness is an emotional state where you feel isolated and disconnected. 
+	Feeling lonely and being alone are not the same. You can enjoy being alone, while others can be in a room full of people and still feel lonely.
+     
+	</p>
+ 	<button id="nextToSection3">Next</button>
+    </div>
+  </section>
+
+</section>
+<!-- ========== SECTION 3 ========== -->
+  <section id="section3">
+    <!-- Sam Intro -->
+    <div class="scene" id="samIntro">
+      <div class="sam-container">
+        <div class="sam-textbox">
+          <h1>Meet Sam</h1>
+          <p>Sam is a high school student who just recently joined the school, he often feels invisible, 
+	even in rooms full of people. He enjoys drawing and reading, but 
+	his quiet nature makes it hard for him to connect with others. Throughout his day, small moments of isolation appear in the classroom, cafeteria, and online, showing how loneliness can quietly affect anyone, anywhere. By following Sam’s story, we can better understand what it feels like to be unseen and disconnected. </p>
+          <button class="next-btn" data-next="sceneClassroom">Next</button>
+        </div>
+        <div class="sam-image"></div>
+      </div>
+    </div>
+
+    <!-- Classroom Scene -->
+    <div class="scene" id="sceneClassroom">
+      <div class="scene-textbox">
+        <h2>The Classroom</h2>
+        <p>The classroom is buzzing with conversation and the rustle of papers, 
+	but Sam feels invisible. New seating arrangements and unfamiliar faces make it hard to find a place where he belongs. Loneliness can happen at any time, but it is especially strong during periods of change — moving to a new school, adjusting to a different home life, or coping with the loss of someone close. As his classmates chat and laugh together, Sam sits quietly at his desk, wishing he could join in but unsure how. The quiet ache of being unseen settles over him, a reminder that even in a room full of people, loneliness can quietly take hold.</p>
+        <button class="next-btn" data-next="sceneCafeteria">Next Scene</button>
+      </div>
+    </div>
+
+    <!-- Cafeteria Scene -->
+    <div class="scene" id="sceneCafeteria">
+      <div class="scene-textbox">
+        <h2>The Cafeteria</h2>
+        <p>The cafeteria is loud with chatter, clattering trays, and the smell of lunch,
+	 yet Sam feels completely alone. Groups of students gather around tables, laughing and sharing stories, while he quietly picks at his food at a corner table. Loneliness can have a huge impact on both physical and mental health — it can lead to feelings of depression and anxiety if left unchecked. The weight of isolation presses down on him, reminding him that even in crowded spaces, the sense of disconnection can be overwhelming. It’s moments like these that show why it’s important to reach out, connect with others, or take steps to care for yourself when feelings of loneliness persist.</p>
+        <button class="next-btn" data-next="phoneScene">Continue</button>
+      </div>
+    </div>
+
+    <!-- Phone Scene -->
+ <div class="scene" id="phoneScene">
+  <div class="phone">
+    <div class="phone-screen" id="phoneFeed">
+      <!-- Friend 1 -->
+      <div class="post">
+        <img src="images/user1.jpg" class="post-avatar" alt="Friend 1">
+        <div class="post-content">
+          <div class="post-header">Friend 1</div>
+          <div class="post-body">Had an amazing day at the park!</div>
+          <img src="images/fun1.jpg" class="post-image" alt="Fun pic 1">
+        </div>
+        <button class="like-btn">❤️ Like</button>
+      </div>
+
+      <!-- Friend 2 -->
+      <div class="post">
+        <img src="images/user2.jpg" class="post-avatar" alt="Friend 2">
+        <div class="post-content">
+          <div class="post-header">Friend 2</div>
+          <div class="post-body">New art piece ✨</div>
+          <img src="images/art.jpg" class="post-image" alt="Art pic">
+        </div>
+        <button class="like-btn">❤️ Like</button>
+      </div>
+
+      <!-- Sam’s placeholder -->
+      <div class="post" id="samPost">
+        <img src="images/sam.png" class="post-avatar" alt="Sam">
+        <div class="post-content">
+          <div class="post-header">@Sam</div>
+          <div class="post-body">(You haven’t posted anything yet)</div>
+        </div>
+        <button class="like-btn">❤️ Like</button>
+      </div>
+    </div>
+
+    <!-- Buttons below feed -->
+    <div class="phone-buttons">
+      <button id="likeBtn">❤️ Like</button>
+      <button id="postBtn">📤 Post</button>
+    </div>
+  </div>
+
+  <!-- Side panel explanation -->
+  <div class="side-text" id="sideText">
+    <p>Social Media has connected us more than ever before. It can help us feel less lonely, but also can have the opposite effect, By increasing isolation and disconnection.
+	Compairing ourselves to others isn't healthy or realistic people often present a persona on social media that only highlights the best bits of their life but isn't reflective of who they really are and their social situation.</p>
+  </div>
+
+  <button class="next-btn" id="toSection4">Next</button>
+</div>
+    </div>
+  </section>
+<!-- ===================== SECTION 4: Outro / Summary ===================== -->
+<section id="section4">
+  <div class="section4-content">
+
+    <!-- Header -->
+    <h1 class="section4-header">10 tips to beat loneliness</h1>
+
+    <!-- Tips Box -->
+    <div class="section4-box tips-box">
+      <h2>Tips to Combat Loneliness</h2>
+      <ul>
+        <li>Talking Therapies</li>
+        <li>Volunteer</li>
+        <li>Work on self love</li>
+        <li>Practice mindfulness</li>
+	<li>Keep a journal</li>
+	<li>Reduce Screentime</li>
+	<li>Look after your body</li>
+	<li>Spend time in nature</li>
+	<li>Get involved</li>
+	<li>Talk</li>
+      </ul>
+    </div>
+
+    <!-- Summary Box -->
+    <div class="section4-box summary-box">
+      <h2>Summary</h2>
+      <p>
+        Loneliness is a universal experience that can affect anyone 
+	at any age. Sam’s story shows how it can appear in different situations — in classrooms, cafeterias, or online — and how small moments of isolation can have a big impact on mental and physical health. Social media, while offering connection, can sometimes increase feelings of isolation or exposure to negative feedback. Recognizing loneliness and taking steps to care for ourselves, build meaningful connections, and reach out to others are essential ways to reduce its impact. Everyone experiences loneliness, and understanding it is the first step toward empathy, connection, and self-care.
+      </p>
+    </div>
+
+    <!-- Conclusion -->
+    <div class="section4-box conclusion-box">
+      <h2>Conclusion</h2>
+      <p>
+        Loneliness is a natural part of life, but it doesn’t have to define us. By understanding our feelings, connecting with others, and practicing self-care, we can navigate moments of isolation and build meaningful connections. Small steps — reaching out, being kind to ourselves, and finding supportive communities — can make a real difference.
+      </p>
+    </div>
+
+  </div>
+</section>
+
+  <script src="main.js"></script>
+</body>
+</html>
+
